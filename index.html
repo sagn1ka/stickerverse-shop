@@ -2,74 +2,84 @@
 <html>
 <head>
 <title>Stickora.in</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
 body{
+margin:0;
 font-family:Poppins;
 background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
 color:white;
+overflow-x:hidden;
+}
+
+/* TOP BAR */
+.topbar{
 display:flex;
+justify-content:space-between;
+padding:15px 25px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
+}
+
+.menu-btn{
+font-size:22px;
+cursor:pointer;
+}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:100px 20px;
+}
+
+.hero h1{
+font-size:3em;
+}
+
+.hero p{
+color:#aaa;
 }
 
 /* SIDEBAR */
 .sidebar{
-width:240px;
-height:100vh;
+position:fixed;
+left:-260px;
+top:0;
+width:250px;
+height:100%;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(15px);
 padding:20px;
-position:fixed;
-border-right:1px solid rgba(255,255,255,0.1);
+transition:0.4s;
 }
 
-.sidebar h2{
-color:#ff4d6d;
-margin-bottom:20px;
+.sidebar.active{
+left:0;
 }
 
 .sidebar button{
+display:block;
 width:100%;
 padding:12px;
 margin:10px 0;
-background:transparent;
+background:none;
 border:none;
 color:#ccc;
 text-align:left;
 cursor:pointer;
-transition:0.3s;
 border-radius:10px;
 }
 
 .sidebar button:hover{
 background:rgba(255,255,255,0.1);
-color:#fff;
+color:white;
 }
 
 /* MAIN */
 .main{
-margin-left:240px;
 padding:30px;
-width:100%;
-animation:fadeIn 0.5s ease;
-}
-
-/* GLASS CARD */
-.card{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
-border-radius:20px;
-padding:20px;
-text-align:center;
 transition:0.4s;
-border:1px solid rgba(255,255,255,0.1);
-}
-
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 25px rgba(255,77,109,0.5);
 }
 
 /* GRID */
@@ -79,53 +89,52 @@ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:20px;
 }
 
-/* BUTTONS */
+.card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:20px;
+text-align:center;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 0 20px rgba(255,77,109,0.4);
+}
+
+.card img{
+width:100px;
+}
+
 .btn{
 padding:8px 15px;
 border:none;
 border-radius:20px;
-cursor:pointer;
 margin:5px;
+cursor:pointer;
 }
 
 .cart{background:#ff4d6d;color:white;}
 .wish{background:#333;color:white;}
 
 .hidden{display:none;}
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(10px);}
-to{opacity:1;transform:translateY(0);}
-}
-
-/* LOGIN BOX */
-.login-box input{
-width:90%;
-padding:10px;
-margin:10px;
-border-radius:10px;
-border:none;
-}
-
-.login-box button{
-background:#ff4d6d;
-padding:10px;
-border:none;
-border-radius:20px;
-color:white;
-cursor:pointer;
-}
 </style>
 </head>
 
 <body>
 
+<!-- TOPBAR -->
+<div class="topbar">
+<h2>Stickora.in</h2>
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+</div>
+
 <!-- SIDEBAR -->
-<div class="sidebar">
-<h2>Stickora</h2>
+<div class="sidebar" id="sidebar">
 
 <button onclick="show('shop')">🛍 Shop</button>
 <button onclick="show('wishlist')">❤️ Wishlist</button>
+<button onclick="show('about')">ℹ About</button>
 <button onclick="show('admin')">⚙ Admin</button>
 <button onclick="show('login')">🔐 Login</button>
 
@@ -134,45 +143,57 @@ cursor:pointer;
 <!-- MAIN -->
 <div class="main">
 
+<!-- HOME -->
+<div id="home">
+<div class="hero">
+<h1>Premium Animated Stickers 🎨</h1>
+<p>Express better. Chat better. Feel better.</p>
+</div>
+</div>
+
 <!-- SHOP -->
-<div id="shop">
+<div id="shop" class="hidden">
 <h1>Sticker Packs</h1>
 <div class="grid" id="products"></div>
 </div>
 
 <!-- WISHLIST -->
 <div id="wishlist" class="hidden">
-<h1>Wishlist ❤️</h1>
+<h1>Your Wishlist ❤️</h1>
 <div id="wishItems"></div>
 </div>
 
-<!-- ADMIN PANEL -->
+<!-- ABOUT -->
+<div id="about" class="hidden">
+<h1>About Stickora</h1>
+
+<p>
+Stickora.in is a premium digital sticker marketplace designed for expressive communication.
+We provide high-quality animated sticker packs for modern users.
+</p>
+
+<p>
+Our goal is to transform everyday conversations into something fun, aesthetic, and meaningful.
+</p>
+
+<p><b>Contact:</b> sag.nika0202@gmail.com</p>
+</div>
+
+<!-- ADMIN -->
 <div id="admin" class="hidden">
 <h1>Admin Dashboard</h1>
 
-<div class="card">
-<h3>Total Users</h3>
-<p id="users">0</p>
-</div>
-
-<div class="card">
-<h3>Total Orders</h3>
-<p id="orders">0</p>
-</div>
-
-<div class="card">
-<h3>Revenue</h3>
-<p>$0</p>
-</div>
-
+<p>Total Users: <span id="users">0</span></p>
+<p>Total Orders: 0</p>
+<p>Revenue: $0</p>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="hidden login-box">
+<div id="login" class="hidden">
 <h1>Login</h1>
 
-<input id="email" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
+<input id="email" placeholder="Email"><br><br>
+<input id="pass" type="password" placeholder="Password"><br><br>
 
 <button onclick="login()">Login</button>
 <button onclick="signup()">Signup</button>
@@ -182,6 +203,18 @@ cursor:pointer;
 
 <script>
 
+/* SIDEBAR */
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("active");
+}
+
+/* NAVIGATION */
+function show(sec){
+document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
+document.getElementById(sec).classList.remove("hidden");
+}
+
+/* PRODUCTS */
 let packs=[
 {name:"Love Pack",price:2.99,img:"https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"},
 {name:"Hype Pack",price:3.49,img:"https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif"},
@@ -189,16 +222,12 @@ let packs=[
 {name:"Mega Bundle",price:6.99,img:"https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"}
 ];
 
-let wishlist=[];
-let users=JSON.parse(localStorage.getItem("users"))||[];
-
-/* PRODUCTS */
 function loadProducts(){
 let html="";
 packs.forEach((p,i)=>{
 html+=`
 <div class="card">
-<img src="${p.img}" width="100">
+<img src="${p.img}">
 <h3>${p.name}</h3>
 <p>$${p.price}</p>
 <button class="btn cart" onclick="addCart(${i})">Add to Cart</button>
@@ -207,12 +236,6 @@ html+=`
 `;
 });
 document.getElementById("products").innerHTML=html;
-}
-
-/* NAV */
-function show(sec){
-document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
-document.getElementById(sec).classList.remove("hidden");
 }
 
 /* CART */
@@ -224,12 +247,15 @@ window.location="cart.html";
 }
 
 /* WISHLIST */
+let wishlist=[];
 function addWish(name){
 wishlist.push(name);
 alert("Added ❤️");
 }
 
 /* LOGIN */
+let users=JSON.parse(localStorage.getItem("users"))||[];
+
 function signup(){
 let email=document.getElementById("email").value;
 users.push(email);
@@ -242,7 +268,6 @@ alert("Logged in");
 show("shop");
 }
 
-/* ADMIN STATS */
 document.getElementById("users").innerText=users.length;
 
 loadProducts();
