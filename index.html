@@ -1,229 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stickify — Premium Animated Stickers</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+<title>Stickora.in — Premium Stickers</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-font-family:'Poppins',sans-serif;
-background:#0c0c0c;
-color:#fff;
-}
-
-/* NAVBAR */
-nav{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 50px;
-background:rgba(0,0,0,0.7);
-backdrop-filter: blur(10px);
-position:sticky;
-top:0;
-z-index:1000;
-}
-
-nav h2{color:#ff4d6d;}
-
-nav a{
-color:#ccc;
-margin-left:25px;
-text-decoration:none;
-transition:0.3s;
-}
-nav a:hover{color:#fff;}
-
-/* HERO */
-.hero{
-text-align:center;
-padding:100px 20px;
-background:radial-gradient(circle at top,#1a1a1a,#000);
-}
-
-.hero h1{
-font-size:3.2em;
-margin-bottom:10px;
-}
-
-.hero p{
-color:#aaa;
-margin-bottom:20px;
-}
-
-.hero button{
-background:#ff4d6d;
-padding:12px 30px;
-border:none;
-border-radius:30px;
-color:white;
-cursor:pointer;
-}
-
-/* SECTION */
-.container{
-max-width:1200px;
-margin:auto;
-padding:60px 20px;
-}
-
-.section-title{
-text-align:center;
-margin-bottom:40px;
-font-size:2em;
-}
-
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-}
-
-.card{
-background:#111;
-border-radius:20px;
-padding:25px;
-text-align:center;
-transition:0.4s;
-border:1px solid rgba(255,255,255,0.05);
-}
-
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 25px rgba(255,77,109,0.4);
-}
-
-.card img{
-width:120px;
-margin-bottom:15px;
-}
-
-.price{
-color:#ff4d6d;
-font-weight:bold;
-margin:10px 0;
-}
-
-.card a button{
-background:linear-gradient(45deg,#ff4d6d,#ff758f);
-border:none;
-padding:10px 25px;
-border-radius:25px;
-color:#fff;
-cursor:pointer;
-}
-
-/* FEATURES */
-.features{
-display:flex;
-flex-wrap:wrap;
-gap:30px;
-text-align:center;
-}
-
-.feature{
-flex:1;
-min-width:200px;
-}
-
-.feature h3{margin-bottom:10px;}
-
-/* FOOTER */
-.footer{
-background:#000;
-padding:30px;
-text-align:center;
-color:#777;
-}
+body{font-family:Poppins;background:#0c0c0c;color:white;margin:0;}
+nav{display:flex;justify-content:space-between;padding:20px;background:#000;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding:40px;}
+.card{background:#111;padding:20px;border-radius:15px;text-align:center;}
+img{width:100px}
+button{margin:5px;padding:8px 15px;border:none;border-radius:20px;cursor:pointer;}
+.cart-btn{background:#ff4d6d;color:white;}
+.wish{background:#444;color:white;}
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
 <nav>
-<h2>Stickify</h2>
+<h2>Stickora.in</h2>
 <div>
-<a href="#">Home</a>
-<a href="#shop">Shop</a>
-<a href="#features">Features</a>
-<a href="#contact">Contact</a>
+<a href="cart.html" style="color:white;">Cart 🛒</a>
 </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-<h1>Premium Animated Stickers 🎨</h1>
-<p>Make your chats expressive, fun & aesthetic</p>
-<a href="#shop"><button>Explore Stickers</button></a>
-</div>
-
-<!-- SHOP -->
-<div class="container" id="shop">
-<h2 class="section-title">Trending Packs</h2>
+<h1 style="text-align:center;">Premium Animated Stickers</h1>
 
 <div class="grid">
 
+<script>
+let packs=[
+{name:"Love Pack",price:2.99,img:"https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"},
+{name:"Hype Pack",price:3.49,img:"https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif"},
+{name:"Fire Pack",price:1.99,img:"https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif"},
+{name:"Party Pack",price:2.49,img:"https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"}
+];
+
+packs.forEach((p,i)=>{
+document.write(`
 <div class="card">
-<img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif">
-<h3>Love Pack</h3>
-<p class="price">$2.99</p>
-<a href="YOUR_PAYMENT_LINK"><button>Buy Now</button></a>
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p>$${p.price}</p>
+<button class="cart-btn" onclick="addCart(${i})">Add to Cart</button>
+<button class="wish" onclick="addWish('${p.name}')">❤️</button>
+</div>
+`);
+});
+
+function addCart(i){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+cart.push(packs[i]);
+localStorage.setItem("cart",JSON.stringify(cart));
+alert("Added to cart");
+}
+
+function addWish(name){
+alert(name+" added to wishlist ❤️");
+}
+</script>
+
 </div>
 
-<div class="card">
-<img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif">
-<h3>Hype Pack</h3>
-<p class="price">$3.49</p>
-<a href="YOUR_PAYMENT_LINK"><button>Buy Now</button></a>
+<div style="padding:40px;text-align:center;">
+<h2>About Stickora</h2>
+<p>Stickora.in is a premium digital sticker marketplace offering high-quality animated sticker packs designed for creators, chat lovers, and brands. Our goal is to bring expressive, aesthetic, and modern communication to life through unique animated stickers.</p>
+
+<p>Each pack is crafted to enhance conversations, boost engagement, and add personality to your digital presence.</p>
 </div>
 
-<div class="card">
-<img src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif">
-<h3>Fire Pack</h3>
-<p class="price">$1.99</p>
-<a href="YOUR_PAYMENT_LINK"><button>Buy Now</button></a>
-</div>
-
-</div>
-</div>
-
-<!-- FEATURES -->
-<div class="container" id="features">
-<h2 class="section-title">Why Stickify?</h2>
-
-<div class="features">
-<div class="feature">
-<h3>High Quality</h3>
-<p>Premium animated sticker packs</p>
-</div>
-
-<div class="feature">
-<h3>Instant Access</h3>
-<p>Get stickers immediately after purchase</p>
-</div>
-
-<div class="feature">
-<h3>Unique Designs</h3>
-<p>Stand out in every conversation</p>
-</div>
-</div>
-</div>
-
-<!-- CONTACT -->
-<div class="container" id="contact">
-<h2 class="section-title">Contact</h2>
-<p style="text-align:center;">Email: yourmail@gmail.com</p>
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-<p>© 2026 Stickify. All rights reserved.</p>
+<div style="text-align:center;padding:20px;">
+Contact: sag.nika0202@gmail.com
 </div>
 
 </body>
