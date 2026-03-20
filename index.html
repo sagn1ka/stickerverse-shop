@@ -13,7 +13,7 @@ color:white;
 overflow-x:hidden;
 }
 
-/* TOP BAR */
+/* TOPBAR */
 .topbar{
 display:flex;
 justify-content:space-between;
@@ -52,6 +52,7 @@ background:rgba(255,255,255,0.05);
 backdrop-filter:blur(15px);
 padding:20px;
 transition:0.4s;
+z-index:1000;
 }
 
 .sidebar.active{
@@ -79,7 +80,6 @@ color:white;
 /* MAIN */
 .main{
 padding:30px;
-transition:0.4s;
 }
 
 /* GRID */
@@ -131,13 +131,12 @@ cursor:pointer;
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-
+<button onclick="show('home')">🏠 Home</button>
 <button onclick="show('shop')">🛍 Shop</button>
 <button onclick="show('wishlist')">❤️ Wishlist</button>
 <button onclick="show('about')">ℹ About</button>
 <button onclick="show('admin')">⚙ Admin</button>
 <button onclick="show('login')">🔐 Login</button>
-
 </div>
 
 <!-- MAIN -->
@@ -145,10 +144,15 @@ cursor:pointer;
 
 <!-- HOME -->
 <div id="home">
+
 <div class="hero">
 <h1>Premium Animated Stickers 🎨</h1>
 <p>Express better. Chat better. Feel better.</p>
 </div>
+
+<h2 style="text-align:center;margin-top:40px;">🔥 Featured Packs</h2>
+<div class="grid" id="homeProducts"></div>
+
 </div>
 
 <!-- SHOP -->
@@ -182,7 +186,6 @@ Our goal is to transform everyday conversations into something fun, aesthetic, a
 <!-- ADMIN -->
 <div id="admin" class="hidden">
 <h1>Admin Dashboard</h1>
-
 <p>Total Users: <span id="users">0</span></p>
 <p>Total Orders: 0</p>
 <p>Revenue: $0</p>
@@ -219,9 +222,11 @@ let packs=[
 {name:"Love Pack",price:2.99,img:"https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"},
 {name:"Hype Pack",price:3.49,img:"https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif"},
 {name:"Fire Pack",price:1.99,img:"https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif"},
+{name:"Party Pack",price:2.49,img:"https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"},
 {name:"Mega Bundle",price:6.99,img:"https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"}
 ];
 
+/* LOAD SHOP */
 function loadProducts(){
 let html="";
 packs.forEach((p,i)=>{
@@ -236,6 +241,22 @@ html+=`
 `;
 });
 document.getElementById("products").innerHTML=html;
+}
+
+/* LOAD HOME FEATURED */
+function loadHomeProducts(){
+let html="";
+packs.slice(0,3).forEach((p,i)=>{
+html+=`
+<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p>$${p.price}</p>
+<button class="btn cart" onclick="addCart(${i})">Add to Cart</button>
+</div>
+`;
+});
+document.getElementById("homeProducts").innerHTML=html;
 }
 
 /* CART */
@@ -270,7 +291,9 @@ show("shop");
 
 document.getElementById("users").innerText=users.length;
 
+/* INIT */
 loadProducts();
+loadHomeProducts();
 
 </script>
 
