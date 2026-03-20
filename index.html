@@ -1,76 +1,253 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Stickora.in — Premium Stickers</title>
+<title>Stickora.in</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:Poppins;background:#0c0c0c;color:white;margin:0;}
-nav{display:flex;justify-content:space-between;padding:20px;background:#000;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding:40px;}
-.card{background:#111;padding:20px;border-radius:15px;text-align:center;}
-img{width:100px}
-button{margin:5px;padding:8px 15px;border:none;border-radius:20px;cursor:pointer;}
-.cart-btn{background:#ff4d6d;color:white;}
-.wish{background:#444;color:white;}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:Poppins;
+background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;
+height:100vh;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+padding:20px;
+position:fixed;
+border-right:1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar h2{
+color:#ff4d6d;
+margin-bottom:20px;
+}
+
+.sidebar button{
+width:100%;
+padding:12px;
+margin:10px 0;
+background:transparent;
+border:none;
+color:#ccc;
+text-align:left;
+cursor:pointer;
+transition:0.3s;
+border-radius:10px;
+}
+
+.sidebar button:hover{
+background:rgba(255,255,255,0.1);
+color:#fff;
+}
+
+/* MAIN */
+.main{
+margin-left:240px;
+padding:30px;
+width:100%;
+animation:fadeIn 0.5s ease;
+}
+
+/* GLASS CARD */
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+border-radius:20px;
+padding:20px;
+text-align:center;
+transition:0.4s;
+border:1px solid rgba(255,255,255,0.1);
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 25px rgba(255,77,109,0.5);
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+/* BUTTONS */
+.btn{
+padding:8px 15px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+margin:5px;
+}
+
+.cart{background:#ff4d6d;color:white;}
+.wish{background:#333;color:white;}
+
+.hidden{display:none;}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* LOGIN BOX */
+.login-box input{
+width:90%;
+padding:10px;
+margin:10px;
+border-radius:10px;
+border:none;
+}
+
+.login-box button{
+background:#ff4d6d;
+padding:10px;
+border:none;
+border-radius:20px;
+color:white;
+cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<nav>
-<h2>Stickora.in</h2>
-<div>
-<a href="cart.html" style="color:white;">Cart 🛒</a>
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h2>Stickora</h2>
+
+<button onclick="show('shop')">🛍 Shop</button>
+<button onclick="show('wishlist')">❤️ Wishlist</button>
+<button onclick="show('admin')">⚙ Admin</button>
+<button onclick="show('login')">🔐 Login</button>
+
 </div>
-</nav>
 
-<h1 style="text-align:center;">Premium Animated Stickers</h1>
+<!-- MAIN -->
+<div class="main">
 
-<div class="grid">
+<!-- SHOP -->
+<div id="shop">
+<h1>Sticker Packs</h1>
+<div class="grid" id="products"></div>
+</div>
+
+<!-- WISHLIST -->
+<div id="wishlist" class="hidden">
+<h1>Wishlist ❤️</h1>
+<div id="wishItems"></div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin" class="hidden">
+<h1>Admin Dashboard</h1>
+
+<div class="card">
+<h3>Total Users</h3>
+<p id="users">0</p>
+</div>
+
+<div class="card">
+<h3>Total Orders</h3>
+<p id="orders">0</p>
+</div>
+
+<div class="card">
+<h3>Revenue</h3>
+<p>$0</p>
+</div>
+
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="hidden login-box">
+<h1>Login</h1>
+
+<input id="email" placeholder="Email">
+<input id="pass" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+<button onclick="signup()">Signup</button>
+</div>
+
+</div>
 
 <script>
+
 let packs=[
 {name:"Love Pack",price:2.99,img:"https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"},
 {name:"Hype Pack",price:3.49,img:"https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif"},
 {name:"Fire Pack",price:1.99,img:"https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif"},
-{name:"Party Pack",price:2.49,img:"https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"}
+{name:"Mega Bundle",price:6.99,img:"https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"}
 ];
 
+let wishlist=[];
+let users=JSON.parse(localStorage.getItem("users"))||[];
+
+/* PRODUCTS */
+function loadProducts(){
+let html="";
 packs.forEach((p,i)=>{
-document.write(`
+html+=`
 <div class="card">
-<img src="${p.img}">
+<img src="${p.img}" width="100">
 <h3>${p.name}</h3>
 <p>$${p.price}</p>
-<button class="cart-btn" onclick="addCart(${i})">Add to Cart</button>
-<button class="wish" onclick="addWish('${p.name}')">❤️</button>
+<button class="btn cart" onclick="addCart(${i})">Add to Cart</button>
+<button class="btn wish" onclick="addWish('${p.name}')">❤️</button>
 </div>
-`);
+`;
 });
+document.getElementById("products").innerHTML=html;
+}
 
+/* NAV */
+function show(sec){
+document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
+document.getElementById(sec).classList.remove("hidden");
+}
+
+/* CART */
 function addCart(i){
 let cart=JSON.parse(localStorage.getItem("cart"))||[];
 cart.push(packs[i]);
 localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to cart");
+window.location="cart.html";
 }
 
+/* WISHLIST */
 function addWish(name){
-alert(name+" added to wishlist ❤️");
+wishlist.push(name);
+alert("Added ❤️");
 }
+
+/* LOGIN */
+function signup(){
+let email=document.getElementById("email").value;
+users.push(email);
+localStorage.setItem("users",JSON.stringify(users));
+alert("Account created");
+}
+
+function login(){
+alert("Logged in");
+show("shop");
+}
+
+/* ADMIN STATS */
+document.getElementById("users").innerText=users.length;
+
+loadProducts();
+
 </script>
-
-</div>
-
-<div style="padding:40px;text-align:center;">
-<h2>About Stickora</h2>
-<p>Stickora.in is a premium digital sticker marketplace offering high-quality animated sticker packs designed for creators, chat lovers, and brands. Our goal is to bring expressive, aesthetic, and modern communication to life through unique animated stickers.</p>
-
-<p>Each pack is crafted to enhance conversations, boost engagement, and add personality to your digital presence.</p>
-</div>
-
-<div style="text-align:center;padding:20px;">
-Contact: sag.nika0202@gmail.com
-</div>
 
 </body>
 </html>
